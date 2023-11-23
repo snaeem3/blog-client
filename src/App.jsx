@@ -3,6 +3,7 @@ import axios from 'axios';
 import config from './config';
 import './App.css';
 import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 const { baseURL } = config;
 
@@ -26,7 +27,7 @@ const App = () => {
   return (
     <>
       <h1>Blog</h1>
-      <Signup />
+      <Login />
     </>
   );
 };
