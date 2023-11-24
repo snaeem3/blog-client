@@ -4,6 +4,7 @@ import config from './config';
 import './App.css';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Nav from './components/Nav';
 
 const { baseURL } = config;
 
@@ -26,8 +27,10 @@ const App = () => {
 
   return (
     <>
+      <Nav />
       <h1>Blog</h1>
-      <Login />
+      {/* <Login /> */}
+      <Signup />
     </>
   );
 };

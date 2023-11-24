@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../config';
+import { handleSignUp } from '../apiClient';
 
 const { baseURL } = config;
 
@@ -21,19 +22,17 @@ const SignUpForm = (props) => {
 
   const [errors, setErrors] = useState(null);
 
-  const handleSignUp = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${baseURL}/auth/sign-up`, formData);
+      const response = await handleSignUp(formData);
 
-      // Handle the response, e.g., redirect or show a success message
-      console.log(response.data);
+      console.log(response);
       setErrors([]);
     } catch (error) {
       // Handle errors, e.g., display an error message
       console.error('Error during registration:', error.response.data);
-      console.log(error.response.data.errors);
       setErrors(error.response.data.errors);
     }
   };
@@ -46,7 +45,7 @@ const SignUpForm = (props) => {
   };
 
   return (
-    <form onSubmit={handleSignUp}>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="username">Username</label>
       <input
         name="username"

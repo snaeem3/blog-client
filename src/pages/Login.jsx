@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../config';
+import { handleLogin } from '../apiClient';
 
 const { baseURL } = config;
 
@@ -19,13 +20,11 @@ const LogInForm = (props) => {
 
   const [errors, setErrors] = useState(null);
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${baseURL}/auth/log-in`, formData);
-
-      // Handle the response, e.g., redirect or show a success message
+      const response = await handleLogin(formData);
       console.log('Log in successful', response.data);
       setErrors([]);
     } catch (error) {
@@ -43,7 +42,7 @@ const LogInForm = (props) => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="username">Username</label>
       <input
         name="username"
