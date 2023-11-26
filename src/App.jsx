@@ -1,36 +1,37 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import config from './config';
 import './App.css';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Nav from './components/Nav';
-
-const { baseURL } = config;
+import PostForm from './components/PostForm';
+import { fetchPosts } from './apiClient';
+import Post from './components/Post';
 
 const App = () => {
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Make a GET request to the backend
-    const fetchPosts = async () => {
+    const getPostData = async () => {
       try {
-        const response = await axios.get(`${baseURL}/posts`);
-        setPosts(response.data);
+        const data = await fetchPosts();
+        setPosts(data);
       } catch (error) {
-        console.error('Error fetching posts:', error);
+        console.error('Error: ', error);
       }
     };
-    fetchPosts();
-    console.log(posts);
+    getPostData();
   }, []);
 
   return (
     <>
       <Nav />
       <h1>Blog</h1>
-      {/* <Login /> */}
-      <Signup />
+      {posts.map((post, index) => (
+        <Post key={index} title={post.title} contentArray={post.content} />
+      ))}
+      <Login />
+      {/* <Signup /> */}
+      <PostForm />
     </>
   );
 };

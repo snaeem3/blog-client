@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../config';
+import { handlePost } from '../apiClient';
 
 const { baseURL } = config;
 
 const PostForm = () => {
   const [postData, setPostData] = useState({ title: '', content: '' });
 
-  const handlePost = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent refresh
 
     try {
-      const response = await axios.post(`${baseURL}/posts/new`, postData);
-      console.log('POST successful:', response.data);
+      const response = await handlePost(postData);
+      console.log('POST successful', response);
     } catch (error) {
-      console.error('Error posting data:', error);
+      console.error('Error posting data', error);
     }
   };
 
   return (
-    <form onSubmit={handlePost}>
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Title"

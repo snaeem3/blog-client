@@ -48,4 +48,26 @@ const handleLogout = async () => {
   }
 };
 
-export { handleSignUp, handleLogin, handleLogout };
+const handlePost = async (postData) => {
+  try {
+    const response = await api.post('/posts/new', postData);
+    console.log('POST successful', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error posting data: ', error.response.data);
+    throw error;
+  }
+};
+
+const fetchPosts = async () => {
+  try {
+    const response = await api.get('/posts');
+    console.log('Fetch posts successful', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error.response.data);
+    throw error;
+  }
+};
+
+export { handleSignUp, handleLogin, handleLogout, handlePost, fetchPosts };
