@@ -70,4 +70,22 @@ const fetchPosts = async () => {
   }
 };
 
-export { handleSignUp, handleLogin, handleLogout, handlePost, fetchPosts };
+const fetchPost = async (id) => {
+  try {
+    const response = await api.get(`/posts/${id}`);
+    console.log(`Fetch post ${id} successful: `, response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching post ${id}: `, error.response.data);
+    throw error;
+  }
+};
+
+export {
+  handleSignUp,
+  handleLogin,
+  handleLogout,
+  handlePost,
+  fetchPosts,
+  fetchPost,
+};

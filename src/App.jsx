@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './App.css';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -26,9 +27,13 @@ const App = () => {
     <>
       <Nav />
       <h1>Blog</h1>
-      {posts.map((post, index) => (
-        <Post key={index} title={post.title} contentArray={post.content} />
-      ))}
+      <ul>
+        {posts.map((post, index) => (
+          <li key={index}>
+            <Link to={`/posts/${post._id}`}>{post.title}</Link>
+          </li>
+        ))}
+      </ul>
       <Login />
       {/* <Signup /> */}
       <PostForm />
