@@ -34,9 +34,9 @@ const App = () => {
           </li>
         ))}
       </ul>
-      <Login />
-      {/* <Signup /> */}
-      <PostForm />
+      <Link to="posts/new">
+        <button type="button">New Blog Post</button>
+      </Link>
     </>
   );
 };

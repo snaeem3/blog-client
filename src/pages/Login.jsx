@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import config from '../config';
+import { useNavigate } from 'react-router-dom';
 import { handleLogin } from '../apiClient';
-
-const { baseURL } = config;
 
 const Login = (props) => (
   <>
@@ -13,6 +10,7 @@ const Login = (props) => (
 );
 
 const LogInForm = (props) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -27,6 +25,8 @@ const LogInForm = (props) => {
       const response = await handleLogin(formData);
       console.log('Log in successful', response.data);
       setErrors([]);
+
+      navigate('/');
     } catch (error) {
       // Handle errors, e.g., display an error message
       console.error('Error during login:', error.response.data);

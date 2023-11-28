@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { fetchPost } from '../apiClient';
 
 const Post = (props) => {
@@ -8,17 +8,20 @@ const Post = (props) => {
     title: '',
     content: [],
     author: '',
+    date: new Date(),
   });
 
   useEffect(() => {
     const getPostDetail = async () => {
       try {
         const postData = await fetchPost(id);
+        // console.log(postData.post.date);
         setPostDetail({
           ...postDetail,
           title: postData.post.title,
           content: postData.post.content,
           author: postData.post.author,
+          date: new Date(postData.post.date),
         });
       } catch (error) {
         console.error('Error: ', error);
@@ -30,6 +33,16 @@ const Post = (props) => {
   return (
     <div className="post">
       <h1>{postDetail.title}</h1>
+      <h2>{`By ${postDetail.author} on ${postDetail.date.toLocaleDateString(
+        'en-us',
+        { year: 'numeric', month: 'short', day: 'numeric' },
+      )}`}</h2>
+      {postDetail.content.map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
+      ))}
+      <Link to="/">
+        <button type="button">Home</button>
+      </Link>
     </div>
   );
 };

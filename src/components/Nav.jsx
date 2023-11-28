@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { handleLogout } from '../apiClient';
 
 const Nav = () => {
@@ -35,11 +36,20 @@ const Nav = () => {
               Log-out
             </button>
           ) : (
-            <a href="">
+            <Link to="/log-in">
               <button type="button">Log-in</button>
-            </a>
+            </Link>
           )}
         </li>
+        {!isLoggedIn ? (
+          <li>
+            <Link to="/sign-up">
+              <button type="button">Sign Up</button>
+            </Link>
+          </li>
+        ) : (
+          ''
+        )}
       </ul>
     </nav>
   );
