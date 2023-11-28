@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
 import Nav from './components/Nav';
-import PostForm from './components/PostForm';
 import { fetchPosts } from './apiClient';
-import Post from './components/Post';
 
 const App = () => {
   const [posts, setPosts] = useState([]);

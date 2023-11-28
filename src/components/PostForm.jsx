@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import config from '../config';
 import { handlePost } from '../apiClient';
-
-const { baseURL } = config;
 
 const PostForm = () => {
   const [postData, setPostData] = useState({ title: '', content: '' });

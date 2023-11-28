@@ -1,29 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { handleLogout } from '../apiClient';
+import { useAuth } from '../authContext';
 
 const Nav = () => {
-  // if no token in local storage, then user is not logged in
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !localStorage.getItem('token') === null,
-  );
-
-  useEffect(() => {
-    // Check if the user is logged in by looking for the authentication token
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); // Set isLoggedIn to true if the token is present
-  }, []);
+  const { isLoggedIn, logout } = useAuth();
 
   const handleLogoutClick = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await handleLogout();
-      console.log('Log out successful', response);
-      setIsLoggedIn(false);
+      await logout();
+      console.log('Log out successful');
     } catch (error) {
-      // Handle errors, e.g., display an error message
-      console.error('Error during login:', error);
+      console.error('Error during log out:', error);
     }
   };
 

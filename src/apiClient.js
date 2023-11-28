@@ -27,7 +27,6 @@ const handleLogin = async (formData) => {
     const response = await api.post('/auth/log-in', formData);
 
     console.log('Log in successful', response.data);
-    localStorage.setItem('token', response.data.accessToken);
     return response.data;
   } catch (error) {
     // Handle errors, e.g., display an error message
@@ -41,7 +40,6 @@ const handleLogout = async () => {
     const response = await api.get('/auth/log-out');
 
     console.log('Log out successful', response.data);
-    localStorage.removeItem('token');
   } catch (error) {
     console.error('Error during logout: ', error.response.data);
     throw error;

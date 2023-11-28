@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleLogin } from '../apiClient';
+import { useAuth } from '../authContext';
 
 const Login = (props) => (
   <>
@@ -10,6 +10,7 @@ const Login = (props) => (
 );
 
 const LogInForm = (props) => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -22,13 +23,12 @@ const LogInForm = (props) => {
     e.preventDefault();
 
     try {
-      const response = await handleLogin(formData);
-      console.log('Log in successful', response.data);
+      const response = await login(formData.username, formData.password);
+      console.log('Log in successful', response);
       setErrors([]);
 
       navigate('/');
     } catch (error) {
-      // Handle errors, e.g., display an error message
       console.error('Error during login:', error.response.data);
       setErrors(error.response.data.error);
     }
