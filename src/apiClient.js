@@ -46,7 +46,9 @@ const handleLogout = async () => {
   }
 };
 
-const handlePost = async (postData) => {
+const handlePost = async (postData, userId) => {
+  postData.authorId = userId;
+  console.log('postData: ', postData);
   try {
     const response = await api.post('/posts/new', postData);
     console.log('POST successful', response.data);
@@ -72,9 +74,28 @@ const fetchPost = async (id) => {
   try {
     const response = await api.get(`/posts/${id}`);
     console.log(`Fetch post ${id} successful: `, response.data);
-    return response.data;
+    console.log(`author: `, response.data.post.author);
+    try {
+      const authorDisplayName = await fetchDisplayName(
+        response.data.post.author,
+      );
+      return { ...response.data, authorDisplayName };
+    } catch (error) {
+      console.error(error);
+    }
   } catch (error) {
     console.error(`Error fetching post ${id}: `, error.response.data);
+    throw error;
+  }
+};
+
+const fetchDisplayName = async (id) => {
+  try {
+    const response = await api.get(`/users/${id}/displayName`);
+    console.log(`Fetch user ${id} displayName successful: `, response.data);
+    return response.data.displayName;
+  } catch (error) {
+    console.error(`Error fetching user ${id}: `, error.response.data);
     throw error;
   }
 };

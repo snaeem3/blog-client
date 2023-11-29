@@ -15,12 +15,12 @@ const Post = (props) => {
     const getPostDetail = async () => {
       try {
         const postData = await fetchPost(id);
-        // console.log(postData.post.date);
+        console.log(postData);
         setPostDetail({
           ...postDetail,
           title: postData.post.title,
           content: postData.post.content,
-          author: postData.post.author,
+          author: postData.authorDisplayName,
           date: new Date(postData.post.date),
         });
       } catch (error) {
@@ -35,7 +35,11 @@ const Post = (props) => {
       <h1>{postDetail.title}</h1>
       <h2>{`By ${postDetail.author} on ${postDetail.date.toLocaleDateString(
         'en-us',
-        { year: 'numeric', month: 'short', day: 'numeric' },
+        {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        },
       )}`}</h2>
       {postDetail.content.map((paragraph, index) => (
         <p key={index}>{paragraph}</p>

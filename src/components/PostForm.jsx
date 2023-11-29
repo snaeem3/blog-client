@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { handlePost } from '../apiClient';
+import { useAuth } from '../authContext';
 
 const PostForm = () => {
+  const { userId } = useAuth();
   const [postData, setPostData] = useState({ title: '', content: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent refresh
-
+    console.log('userId: ', userId);
     try {
-      const response = await handlePost(postData);
+      const response = await handlePost(postData, userId);
       console.log('POST successful', response);
     } catch (error) {
       console.error('Error posting data', error);
