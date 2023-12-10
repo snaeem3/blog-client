@@ -6,6 +6,18 @@ const api = axios.create({
   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
 });
 
+// Add a request interceptor to set the Authorization header
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
 const handleSignUp = async (formData) => {
   try {
     const response = await api.post(`/auth/sign-up`, formData);
@@ -59,6 +71,19 @@ const handlePost = async (postData, userId) => {
   }
 };
 
+const handleComment = async (commentText, postId, userId) => {
+  const commentData = { commentText, authorId: userId };
+  const token = localStorage.getItem('token');
+  try {
+    const response = await api.post(`/posts/${postId}/comments`, commentData);
+    console.log('POST successful', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error posting data: ', error.response.data.errors);
+    throw error;
+  }
+};
+
 const fetchPosts = async () => {
   try {
     const response = await api.get('/posts');
@@ -76,15 +101,52 @@ const fetchPost = async (id) => {
     console.log(`Fetch post ${id} successful: `, response.data);
     console.log(`author: `, response.data.post.author);
     try {
+      const [authorDisplayName, comments] = await Promise.all([
+        fetchDisplayName(response.data.post.author),
+        fetchComments(id),
+      ]);
+      return { ...response.data, authorDisplayName, comments };
+    } catch (error) {
+      console.error(error);
+    }
+  } catch (error) {
+    console.error(`Error fetching post ${id}: `, error.response.data);
+    throw error;
+  }
+};
+
+const fetchComment = async (id) => {
+  try {
+    const response = await api.get(`/comments/${id}`);
+    console.log(`Fetch comment ${id} successful: `, response.data);
+    console.log(`author: `, response.data.comment.author);
+    try {
       const authorDisplayName = await fetchDisplayName(
-        response.data.post.author,
+        response.data.comment.author,
       );
       return { ...response.data, authorDisplayName };
     } catch (error) {
       console.error(error);
     }
   } catch (error) {
-    console.error(`Error fetching post ${id}: `, error.response.data);
+    console.error(`Error fetching comment ${id}: `, error.response.data);
+    throw error;
+  }
+};
+
+const fetchComments = async (postId) => {
+  try {
+    const response = await api.get(`/posts/${postId}/comments`);
+    console.log(
+      `Fetch comments for Post ${postId} successful: `,
+      response.data,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error fetching comments for Post ${postId}: `,
+      error.response.data,
+    );
     throw error;
   }
 };
@@ -105,6 +167,7 @@ export {
   handleLogin,
   handleLogout,
   handlePost,
+  handleComment,
   fetchPosts,
   fetchPost,
 };

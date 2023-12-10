@@ -5,7 +5,7 @@ import { AuthProvider } from './authContext.jsx';
 import App from './App.jsx';
 import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
-import Post from './components/Post.jsx';
+import Post from './pages/Post.jsx';
 import PostForm from './components/PostForm.jsx';
 import './index.css';
 

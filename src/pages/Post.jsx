@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../authContext';
 import { fetchPost } from '../apiClient';
+import CommentForm from '../components/CommentForm';
 
 const Post = (props) => {
+  const { userId } = useAuth();
   const { id } = useParams();
   const [postDetail, setPostDetail] = useState({
     title: '',
     content: [],
     author: '',
+    comments: [],
     date: new Date(),
   });
 
@@ -15,12 +19,13 @@ const Post = (props) => {
     const getPostDetail = async () => {
       try {
         const postData = await fetchPost(id);
-        console.log(postData);
+        console.log('postData: ', postData);
         setPostDetail({
           ...postDetail,
           title: postData.post.title,
           content: postData.post.content,
           author: postData.authorDisplayName,
+          comments: postData.comments,
           date: new Date(postData.post.date),
         });
       } catch (error) {
@@ -44,6 +49,17 @@ const Post = (props) => {
       {postDetail.content.map((paragraph, index) => (
         <p key={index}>{paragraph}</p>
       ))}
+      <div>
+        <ul className="comment-list">
+          {postDetail.comments.map((comment, index) => (
+            <li key={index} className="comment">
+              <p>{comment.content}</p>
+              <p>{comment.date}</p>
+            </li>
+          ))}
+        </ul>
+        <CommentForm postId={id} userId={userId} />
+      </div>
       <Link to="/">
         <button type="button">Home</button>
       </Link>

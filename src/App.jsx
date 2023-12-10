@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import './App.css';
 import Nav from './components/Nav';
 import { fetchPosts } from './apiClient';
+import { useAuth } from './authContext';
 
 const App = () => {
+  const { isLoggedIn, isAdmin } = useAuth();
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -30,9 +32,13 @@ const App = () => {
           </li>
         ))}
       </ul>
-      <Link to="posts/new">
-        <button type="button">New Blog Post</button>
-      </Link>
+      {isLoggedIn && isAdmin ? (
+        <Link to="posts/new">
+          <button type="button">New Blog Post</button>
+        </Link>
+      ) : (
+        <p>You must be be logged in and an admin to create blog posts</p>
+      )}
     </>
   );
 };
