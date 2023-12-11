@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../authContext';
 import { fetchPost } from '../apiClient';
 import CommentForm from '../components/CommentForm';
+import Comment from '../components/Comment';
 
 const Post = (props) => {
   const { userId } = useAuth();
@@ -47,14 +48,19 @@ const Post = (props) => {
         },
       )}`}</h2>
       {postDetail.content.map((paragraph, index) => (
-        <p key={index}>{paragraph}</p>
+        <p key={index} className="post-paragraph">
+          {paragraph}
+        </p>
       ))}
       <div>
         <ul className="comment-list">
           {postDetail.comments.map((comment, index) => (
-            <li key={index} className="comment">
-              <p>{comment.content}</p>
-              <p>{comment.date}</p>
+            <li key={index}>
+              <Comment
+                commentText={comment.content}
+                date={new Date(comment.date)}
+                authorId={comment.author}
+              />
             </li>
           ))}
         </ul>

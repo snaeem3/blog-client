@@ -170,4 +170,5 @@ export {
   handleComment,
   fetchPosts,
   fetchPost,
+  fetchDisplayName,
 };
