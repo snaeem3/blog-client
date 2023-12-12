@@ -73,13 +73,23 @@ const handlePost = async (postData, userId) => {
 
 const handleComment = async (commentText, postId, userId) => {
   const commentData = { commentText, authorId: userId };
-  const token = localStorage.getItem('token');
   try {
     const response = await api.post(`/posts/${postId}/comments`, commentData);
     console.log('POST successful', response.data);
     return response.data;
   } catch (error) {
     console.error('Error posting data: ', error.response.data.errors);
+    throw error;
+  }
+};
+
+const deleteComment = async (postId, commentId) => {
+  try {
+    const response = await api.delete(`/posts/${postId}/comments/${commentId}`);
+    console.log('DELETE comment successful', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting comment: ', error);
     throw error;
   }
 };
@@ -168,6 +178,7 @@ export {
   handleLogout,
   handlePost,
   handleComment,
+  deleteComment,
   fetchPosts,
   fetchPost,
   fetchDisplayName,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../authContext';
-import { fetchPost } from '../apiClient';
+import { fetchPost, handleComment, deleteComment } from '../apiClient';
 import CommentForm from '../components/CommentForm';
 import Comment from '../components/Comment';
 
@@ -16,23 +16,40 @@ const Post = (props) => {
     date: new Date(),
   });
 
+  const getPostDetail = async () => {
+    try {
+      const postData = await fetchPost(id);
+      console.log('postData: ', postData);
+      setPostDetail({
+        ...postDetail,
+        title: postData.post.title,
+        content: postData.post.content,
+        author: postData.authorDisplayName,
+        comments: postData.comments,
+        date: new Date(postData.post.date),
+      });
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  };
+
+  const handleCommentSubmit = async (commentText) => {
+    try {
+      const response = await handleComment(commentText, id, userId);
+      console.log('Comment successful', response);
+      getPostDetail();
+    } catch (error) {
+      console.error('Error submitting comment', error);
+    }
+  };
+
+  const handleDeleteCommentClick = async (comment) => {
+    console.log(comment);
+    const response = await deleteComment(id, comment._id);
+    getPostDetail();
+  };
+
   useEffect(() => {
-    const getPostDetail = async () => {
-      try {
-        const postData = await fetchPost(id);
-        console.log('postData: ', postData);
-        setPostDetail({
-          ...postDetail,
-          title: postData.post.title,
-          content: postData.post.content,
-          author: postData.authorDisplayName,
-          comments: postData.comments,
-          date: new Date(postData.post.date),
-        });
-      } catch (error) {
-        console.error('Error: ', error);
-      }
-    };
     getPostDetail();
   }, []);
 
@@ -61,10 +78,21 @@ const Post = (props) => {
                 date={new Date(comment.date)}
                 authorId={comment.author}
               />
+              <button
+                type="button"
+                className="delete-comment-btn"
+                onClick={() => handleDeleteCommentClick(comment)}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
-        <CommentForm postId={id} userId={userId} />
+        <CommentForm
+          postId={id}
+          userId={userId}
+          handleCommentSubmit={handleCommentSubmit}
+        />
       </div>
       <Link to="/">
         <button type="button">Home</button>
