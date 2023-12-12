@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { handleLogin, handleLogout } from './apiClient';
 
 const AuthContext = createContext();
@@ -11,7 +12,15 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    const decodedToken = jwtDecode(token);
+    if (decodedToken) {
+      setIsLoggedIn(true);
+      setDisplayName(decodedToken.displayName);
+      setIsAdmin(decodedToken.isAdmin);
+      setUserId(decodedToken.userId);
+    } else {
+      console.error('Invalid or expired token');
+    }
   }, []);
 
   const login = async (username, password) => {
