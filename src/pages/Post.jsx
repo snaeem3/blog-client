@@ -6,7 +6,7 @@ import CommentForm from '../components/CommentForm';
 import Comment from '../components/Comment';
 
 const Post = (props) => {
-  const { userId } = useAuth();
+  const { userId, isLoggedIn } = useAuth();
   const { id } = useParams();
   const [postDetail, setPostDetail] = useState({
     title: '',
@@ -78,21 +78,27 @@ const Post = (props) => {
                 date={new Date(comment.date)}
                 authorId={comment.author}
               />
-              <button
-                type="button"
-                className="delete-comment-btn"
-                onClick={() => handleDeleteCommentClick(comment)}
-              >
-                Delete
-              </button>
+              {comment.author === userId && (
+                <button
+                  type="button"
+                  className="delete-comment-btn"
+                  onClick={() => handleDeleteCommentClick(comment)}
+                >
+                  Delete
+                </button>
+              )}
             </li>
           ))}
         </ul>
-        <CommentForm
-          postId={id}
-          userId={userId}
-          handleCommentSubmit={handleCommentSubmit}
-        />
+        {isLoggedIn ? (
+          <CommentForm
+            postId={id}
+            userId={userId}
+            handleCommentSubmit={handleCommentSubmit}
+          />
+        ) : (
+          <p>You must be logged in to leave a comment</p>
+        )}
       </div>
       <Link to="/">
         <button type="button">Home</button>
