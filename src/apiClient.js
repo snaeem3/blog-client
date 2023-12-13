@@ -58,16 +58,29 @@ const handleLogout = async () => {
   }
 };
 
-const handlePost = async (postData, userId) => {
+const handlePost = async (postData, userId, postId) => {
   postData.authorId = userId;
   console.log('postData: ', postData);
-  try {
-    const response = await api.post('/posts/new', postData);
-    console.log('POST successful', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error posting data: ', error.response.data);
-    throw error;
+
+  // Update post if postId is provided otherwise create new post
+  if (postId) {
+    try {
+      const response = await api.put(`/posts/${postId}`, postData);
+      console.log('PUT successful', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating post: ', error.response.data);
+      throw error;
+    }
+  } else {
+    try {
+      const response = await api.post('/posts/new', postData);
+      console.log('POST successful', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error posting data: ', error.response.data);
+      throw error;
+    }
   }
 };
 
