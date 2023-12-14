@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../authContext';
-import { fetchPost, handleComment, deleteComment } from '../apiClient';
+import {
+  fetchPost,
+  deletePost,
+  handleComment,
+  deleteComment,
+} from '../apiClient';
 import CommentForm from '../components/CommentForm';
 import Comment from '../components/Comment';
 
 const Post = (props) => {
-  const { userId, isLoggedIn } = useAuth();
+  const { userId, isLoggedIn, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [postDetail, setPostDetail] = useState({
     title: '',
@@ -33,13 +39,22 @@ const Post = (props) => {
     }
   };
 
+  const handlePostDelete = async () => {
+    try {
+      const response = await deletePost(id);
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting post ', error);
+    }
+  };
+
   const handleCommentSubmit = async (commentText) => {
     try {
       const response = await handleComment(commentText, id, userId);
       console.log('Comment successful', response);
-      getPostDetail();
+      await getPostDetail();
     } catch (error) {
-      console.error('Error submitting comment', error);
+      console.error('Error submitting comment ', error);
     }
   };
 
@@ -69,6 +84,16 @@ const Post = (props) => {
           {paragraph}
         </p>
       ))}
+      {isAdmin && (
+        <button
+          type="button"
+          className="delete-post-btn"
+          onClick={() => handlePostDelete()}
+        >
+          Delete Post
+        </button>
+      )}
+
       <div>
         <ul className="comment-list">
           {postDetail.comments.map((comment, index) => (
@@ -101,7 +126,7 @@ const Post = (props) => {
         )}
       </div>
       <Link to="/">
-        <button type="button">Home</button>
+        <button type="button">Return Home</button>
       </Link>
     </div>
   );

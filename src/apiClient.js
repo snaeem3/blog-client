@@ -66,7 +66,7 @@ const handlePost = async (postData, userId, postId) => {
   if (postId) {
     try {
       const response = await api.put(`/posts/${postId}`, postData);
-      console.log('PUT successful', response.data);
+      console.log('PUT successful ', response.data);
       return response.data;
     } catch (error) {
       console.error('Error updating post: ', error.response.data);
@@ -81,6 +81,17 @@ const handlePost = async (postData, userId, postId) => {
       console.error('Error posting data: ', error.response.data);
       throw error;
     }
+  }
+};
+
+const deletePost = async (postId) => {
+  try {
+    const response = await api.delete(`/posts/${postId}`);
+    console.log('DELETE post successful ', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting data: ', error.response.data);
+    throw error;
   }
 };
 
@@ -190,6 +201,7 @@ export {
   handleLogin,
   handleLogout,
   handlePost,
+  deletePost,
   handleComment,
   deleteComment,
   fetchPosts,
