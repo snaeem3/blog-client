@@ -40,11 +40,18 @@ const Post = (props) => {
   };
 
   const handlePostDelete = async () => {
-    try {
-      const response = await deletePost(id);
-      navigate('/');
-    } catch (error) {
-      console.error('Error deleting post ', error);
+    const isConfirmed = window.confirm(
+      `Are you sure you want to delete this post${
+        postDetail.comments.length > 0 ? ' and its comments' : ''
+      }?`,
+    );
+    if (isConfirmed) {
+      try {
+        const response = await deletePost(id);
+        navigate('/');
+      } catch (error) {
+        console.error('Error deleting post ', error);
+      }
     }
   };
 
